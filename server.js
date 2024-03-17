@@ -1,8 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const http = require('http');
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = require('socket.io')(server);
+io.on('connection', (socket) => {
+    console.log(`Client connected: ${socket.id}`); 
+    // Other socket.io event handlers...
+    socket.on('disconnect', () => {
+        console.log(`Client disconnected: ${socket.id}`);
+    });
+});
+
 
 mongoose.connect('mongodb+srv://safio100:safio100@cluster0.szszf4r.mongodb.net/todoapp?retryWrites=true&w=majority&appName=Cluster0',)
 .then(() => { 
@@ -35,6 +48,7 @@ app.post('/create-todo', async (req, res) => {
             title: title.trim(),
         });    
         await todo.save();
+        io.emit('todoCreated', todo);
         res.status(200).json(todo);
     }catch(err){
         console.log(err);
@@ -47,12 +61,13 @@ app.delete('/delete-todo/:id', async (req, res) => {
         const { id } = req.params;
         const todo = await Todo.findByIdAndDelete(id);
         if(!todo) throw new Error('Todo not found');
+        io.emit('todoDeleted', { id }); // Emitting an event after a todo is deleted
         res.status(200).json(todo);
     }catch(err){
         console.log(err);
         res.status(500).send(err.message);
     }
 });
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log('Server running on port 3000');
 });
