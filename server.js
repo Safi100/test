@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
+const cors = require('cors');
 
 const app = express();
 
@@ -28,6 +29,7 @@ mongoose.connect('mongodb+srv://safio100:safio100@cluster0.szszf4r.mongodb.net/t
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors());
 
 const Todo = require('./todo.model');
 
