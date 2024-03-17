@@ -8,7 +8,15 @@ const app = express();
 
 const server = http.createServer(app);
 
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Explicitly allowing common methods
+    allowedHeaders: ["*"], // Allow all headers
+    credentials: false
+  }
+});
+
 io.on('connection', (socket) => {
     console.log(`Client connected: ${socket.id}`); 
     // Other socket.io event handlers...
