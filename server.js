@@ -58,6 +58,7 @@ app.post('/create-todo', async (req, res) => {
             title: title.trim(),
         });    
         await todo.save();
+        console.log('Emitting todoCreated', todo);
         io.emit('todoCreated', todo);
         res.status(200).json(todo);
     }catch(err){
