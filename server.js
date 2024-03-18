@@ -70,6 +70,7 @@ app.delete('/reset-all', async (req, res) => {
     try{
 
         await Todo.deleteMany();
+        io.emit('resetTodos');
         res.status(200).json("deleted all todos!");
     }catch(err){
         console.log(err);
