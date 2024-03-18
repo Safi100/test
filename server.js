@@ -66,6 +66,17 @@ app.post('/create-todo', async (req, res) => {
         res.status(500).send(err.message);
     }    
 });
+app.delete('/reset-all', async (req, res) => {
+    try{
+
+        await Todo.deleteMany();
+        await Todo.save();
+        res.status(200).json("deleted all todos!");
+    }catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+    }
+})
 app.delete('/delete-todo/:id', async (req, res) => {
     try{
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) throw new Error('Invalid ID');
