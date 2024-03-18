@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
-  cors: {
+  cors: { 
     origin: "*", // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Explicitly allowing common methods
     allowedHeaders: ["*"], // Allow all headers
