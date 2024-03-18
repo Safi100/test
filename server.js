@@ -83,7 +83,7 @@ app.delete('/delete-todo/:id', async (req, res) => {
         const { id } = req.params;
         const todo = await Todo.findByIdAndDelete(id);
         if(!todo) throw new Error('Todo not found');
-        io.emit('todoDeleted', { id }); // Emitting an event after a todo is deleted
+        io.emit('todoDeleted', { todo._id }); // Emitting an event after a todo is deleted
         res.status(200).json(todo);
     }catch(err){
         console.log(err);
