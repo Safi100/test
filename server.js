@@ -94,9 +94,11 @@ app.put('/update-todo/:id', async (req, res) => {
     try{
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) throw new Error('Invalid ID');
         const { id } = req.params;
-        const todo = await Todo.findByIdAndUpdate(id, {title: req.body.title.trim()});
+        const todo = await Todo.findById(id);
         if(!todo) throw new Error('Todo not found');
-        io.emit('updateTodo',  todo ); // Emitting an event after a todo is deleted
+        todo.title = req.body.title.trim();
+        await todo.save()
+        io.emit('updateTodo',  todo); // Emitting an event after a todo is deleted
         res.status(200).json(todo);
     }catch(err){
         console.log(err);
